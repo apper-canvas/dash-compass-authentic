@@ -116,8 +116,8 @@ const activityData = {
   };
 
   const getContactName = (contactId) => {
-const contact = contacts.find(c => c.Id === (contactId?.Id || contactId));
-    return contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact";
+// contact_id_c is a lookup field that returns as {Id, Name} object from API
+    return contactId?.Name || "Unknown Contact";
   };
 
 const getDealTitle = (dealId) => {
@@ -223,7 +223,7 @@ name={getActivityIcon(activity.type_c)}
                             {activity.type_c.replace(/\b\w/g, l => l.toUpperCase())}
                           </Badge>
                           <span className="text-sm font-medium text-slate-800">
-                            {getContactName(activity.contactId)}
+{getContactName(activity.contact_id_c)}
                           </span>
 {deal && (
                             <span className="text-sm text-slate-500">
