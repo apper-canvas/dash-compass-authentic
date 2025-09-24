@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
-import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
-import Input from "@/components/atoms/Input";
-import Modal from "@/components/molecules/Modal";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
 import { dealService } from "@/services/api/dealService";
 import { contactService } from "@/services/api/contactService";
+import ApperIcon from "@/components/ApperIcon";
+import Modal from "@/components/molecules/Modal";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
 
 const Deals = () => {
   const [deals, setDeals] = useState([]);
@@ -23,13 +23,13 @@ const Deals = () => {
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 const [formData, setFormData] = useState({
-    title: "",
-    contactId: "",
-    assignee: "",
-    value: "",
-    stage: "lead",
-    probability: "",
-    expectedCloseDate: ""
+    title_c: "",
+    contact_id_c: "",
+    assignee_c: "",
+    value_c: "",
+    stage_c: "lead",
+    probability_c: "",
+    expected_close_date_c: ""
   });
 
   const stages = [
@@ -66,25 +66,25 @@ const [formData, setFormData] = useState({
     if (deal) {
       setSelectedDeal(deal);
       setFormData({
-title: deal.title,
-        contactId: deal.contactId.toString(),
-        assignee: deal.assignee || "",
-        value: deal.value.toString(),
-        stage: deal.stage,
-        probability: deal.probability.toString(),
-        expectedCloseDate: format(new Date(deal.expectedCloseDate), "yyyy-MM-dd")
+title_c: deal.title_c,
+        contact_id_c: (deal.contact_id_c?.Id || deal.contact_id_c).toString(),
+        assignee_c: deal.assignee_c || "",
+        value_c: deal.value_c.toString(),
+        stage_c: deal.stage_c,
+        probability_c: deal.probability_c.toString(),
+        expected_close_date_c: format(new Date(deal.expected_close_date_c), "yyyy-MM-dd")
       });
       setIsEditing(true);
     } else {
       setSelectedDeal(null);
 setFormData({
-        title: "",
-        contactId: "",
-        assignee: "",
-        value: "",
-        stage: "lead",
-        probability: "",
-        expectedCloseDate: ""
+title_c: "",
+        contact_id_c: "",
+        assignee_c: "",
+        value_c: "",
+        stage_c: "lead",
+        probability_c: "",
+        expected_close_date_c: ""
       });
       setIsEditing(false);
     }
@@ -101,12 +101,12 @@ setFormData({
     e.preventDefault();
     try {
       const dealData = {
-        ...formData,
-        contactId: parseInt(formData.contactId),
-        value: parseFloat(formData.value),
-assignee: formData.assignee,
-        probability: parseInt(formData.probability),
-        expectedCloseDate: new Date(formData.expectedCloseDate).toISOString()
+...formData,
+        contact_id_c: parseInt(formData.contact_id_c),
+        value_c: parseFloat(formData.value_c),
+        assignee_c: formData.assignee_c,
+        probability_c: parseInt(formData.probability_c),
+        expected_close_date_c: new Date(formData.expected_close_date_c).toISOString()
       };
 
       if (isEditing) {
@@ -149,11 +149,11 @@ assignee: formData.assignee,
   const handleDrop = async (e, targetStage) => {
     e.preventDefault();
     const dealId = parseInt(e.dataTransfer.getData("text/plain"));
-    const deal = deals.find(d => d.Id === dealId);
+const deal = deals.find(d => d.Id === dealId);
     
-    if (deal && deal.stage !== targetStage) {
+    if (deal && deal.stage_c !== targetStage) {
       try {
-        await dealService.update(dealId, { stage: targetStage });
+        await dealService.update(dealId, { stage_c: targetStage });
         toast.success("Deal stage updated");
         await loadData();
       } catch (err) {
@@ -167,9 +167,9 @@ assignee: formData.assignee,
     return stageConfig ? stageConfig.color : "default";
   };
 
-  const getContactName = (contactId) => {
-    const contact = contacts.find(c => c.Id === contactId);
-    return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
+const getContactName = (contactId) => {
+    const contact = contacts.find(c => c.Id === (contactId?.Id || contactId));
+    return contact ? `${contact.first_name_c || ''} ${contact.last_name_c || ''}`.trim() : "Unknown Contact";
   };
 
   if (loading) return <Loading type="cards" />;
@@ -187,11 +187,10 @@ assignee: formData.assignee,
       </div>
 
       {/* Pipeline Board */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {stages.map(stage => {
-          const stageDeals = deals.filter(deal => deal.stage === stage.key);
-          const stageValue = stageDeals.reduce((sum, deal) => sum + deal.value, 0);
-          
+          const stageDeals = deals.filter(deal => deal.stage_c === stage.key);
+          const stageValue = stageDeals.reduce((sum, deal) => sum + (deal.value_c || 0), 0);
           return (
             <motion.div
               key={stage.key}
@@ -234,42 +233,41 @@ assignee: formData.assignee,
                         onDragStart={(e) => handleDragStart(e, deal.Id)}
                         onClick={() => handleOpenModal(deal)}
                       >
-                        <div className="flex items-start justify-between mb-2">
+<div className="flex items-start justify-between mb-2">
                           <h4 className="font-medium text-slate-800 text-sm line-clamp-2">
-                            {deal.title}
+                            {deal.title_c}
                           </h4>
-                          <ApperIcon name="GripVertical" size={16} className="text-slate-400" />
-</div>
+                        </div>
                         
-                        <p className="text-sm text-slate-600 mb-1">
-                          {getContactName(deal.contactId)}
+                        <p className="text-xs text-slate-500 mb-2">
+                          {getContactName(deal.contact_id_c)}
                         </p>
                         
-                        {deal.assignee && (
+{deal.assignee_c && (
                           <p className="text-xs text-slate-500 mb-2 flex items-center">
                             <ApperIcon name="User" size={12} className="mr-1" />
-                            Assigned to {deal.assignee}
+                            {deal.assignee_c}
                           </p>
                         )}
                         
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-slate-800">
-                            ${deal.value.toLocaleString()}
+                          <span className="text-sm font-semibold text-green-600">
+                            ${deal.value_c.toLocaleString()}
                           </span>
                           <span className="text-sm text-slate-500">
-                            {deal.probability}%
+                            {deal.probability_c}%
                           </span>
                         </div>
                         
                         <div className="w-full bg-slate-200 rounded-full h-2 mb-2">
                           <div
-                            className="bg-gradient-to-r from-primary to-blue-700 h-2 rounded-full"
-                            style={{ width: `${deal.probability}%` }}
+className="bg-gradient-to-r from-primary to-blue-700 h-2 rounded-full"
+                            style={{ width: `${deal.probability_c}%` }}
                           />
                         </div>
                         
                         <p className="text-xs text-slate-400">
-                          Expected: {format(new Date(deal.expectedCloseDate), "MMM dd, yyyy")}
+Expected: {format(new Date(deal.expected_close_date_c), "MMM dd, yyyy")}
                         </p>
                       </Card>
                     </motion.div>
@@ -289,10 +287,10 @@ assignee: formData.assignee,
         size="md"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
+<Input
             label="Deal Title"
-            value={formData.title}
-            onChange={(e) => setFormData(prev => ({...prev, title: e.target.value}))}
+            value={formData.title_c}
+            onChange={(e) => setFormData(prev => ({...prev, title_c: e.target.value}))}
             required
           />
           
@@ -300,16 +298,16 @@ assignee: formData.assignee,
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Contact
             </label>
-            <select
-              value={formData.contactId}
-              onChange={(e) => setFormData(prev => ({...prev, contactId: e.target.value}))}
-className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+<select
+              value={formData.contact_id_c}
+              onChange={(e) => setFormData(prev => ({...prev, contact_id_c: e.target.value}))}
+              className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             >
-              <option value="">Select a contact</option>
+              <option value="">Select contact...</option>
               {contacts.map(contact => (
                 <option key={contact.Id} value={contact.Id}>
-                  {contact.firstName} {contact.lastName} - {contact.company}
+                  {contact.first_name_c} {contact.last_name_c} - {contact.company_c}
                 </option>
               ))}
             </select>
@@ -319,9 +317,9 @@ className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slat
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Assignee
             </label>
-            <select
-              value={formData.assignee}
-              onChange={(e) => setFormData(prev => ({...prev, assignee: e.target.value}))}
+<select
+              value={formData.assignee_c}
+              onChange={(e) => setFormData(prev => ({...prev, assignee_c: e.target.value}))}
               className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Select assignee</option>
@@ -334,20 +332,20 @@ className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slat
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
+<Input
               label="Deal Value ($)"
               type="number"
-value={formData.value}
-              onChange={(e) => setFormData(prev => ({...prev, value: e.target.value}))}
+              value={formData.value_c}
+              onChange={(e) => setFormData(prev => ({...prev, value_c: e.target.value}))}
               required
             />
-            <Input
+<Input
               label="Probability (%)"
               type="number"
               min="0"
               max="100"
-              value={formData.probability}
-              onChange={(e) => setFormData(prev => ({...prev, probability: e.target.value}))}
+              value={formData.probability_c}
+              onChange={(e) => setFormData(prev => ({...prev, probability_c: e.target.value}))}
               required
             />
           </div>
@@ -356,9 +354,9 @@ value={formData.value}
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Stage
             </label>
-            <select
-              value={formData.stage}
-              onChange={(e) => setFormData(prev => ({...prev, stage: e.target.value}))}
+<select
+              value={formData.stage_c}
+              onChange={(e) => setFormData(prev => ({...prev, stage_c: e.target.value}))}
               className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               {stages.map(stage => (
@@ -369,11 +367,11 @@ value={formData.value}
             </select>
           </div>
           
-          <Input
+<Input
             label="Expected Close Date"
             type="date"
-            value={formData.expectedCloseDate}
-            onChange={(e) => setFormData(prev => ({...prev, expectedCloseDate: e.target.value}))}
+            value={formData.expected_close_date_c}
+            onChange={(e) => setFormData(prev => ({...prev, expected_close_date_c: e.target.value}))}
             required
           />
 

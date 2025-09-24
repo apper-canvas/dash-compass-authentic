@@ -69,7 +69,7 @@ function Reports() {
       strokeOpacity: 0.9
 },
     xaxis: {
-      categories: conversionTrend?.map(item => format(new Date(item.month), 'MMM yyyy')) || [],
+categories: conversionTrend?.map(item => format(new Date(item.month), 'MMM yyyy')) || [],
       labels: {
         style: {
           fontSize: '12px',
@@ -287,15 +287,15 @@ const revenueChartSeries = [{
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-600">Conversion Rate</p>
-                <p className="text-2xl font-bold text-slate-800">{conversionRate.current.toFixed(1)}%</p>
+<p className="text-2xl font-bold text-slate-800">{conversionRate?.current?.toFixed(1) || 0}%</p>
                 <div className="flex items-center mt-1">
                   <ApperIcon 
-                    name={conversionRate.trend > 0 ? "ArrowUp" : "ArrowDown"} 
+                    name={conversionRate?.trend > 0 ? "ArrowUp" : "ArrowDown"} 
                     size={12} 
-                    className={conversionRate.trend > 0 ? "text-green-600" : "text-red-600"} 
+                    className={conversionRate?.trend > 0 ? "text-green-600" : "text-red-600"} 
                   />
-                  <span className={`text-xs ml-1 ${conversionRate.trend > 0 ? "text-green-600" : "text-red-600"}`}>
-                    {Math.abs(conversionRate.trend).toFixed(1)}%
+                  <span className={`text-xs ml-1 ${conversionRate?.trend > 0 ? "text-green-600" : "text-red-600"}`}>
+                    {Math.abs(conversionRate?.trend || 0).toFixed(1)}%
                   </span>
                 </div>
               </div>

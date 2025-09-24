@@ -23,11 +23,11 @@ const Activities = () => {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [typeFilter, setTypeFilter] = useState("all");
-  const [formData, setFormData] = useState({
-    contactId: "",
-    dealId: "",
-    type: "call",
-    description: ""
+const [formData, setFormData] = useState({
+    contact_id_c: "",
+    deal_id_c: "",
+    type_c: "call",
+    description_c: ""
   });
 
   const activityTypes = [
@@ -78,10 +78,10 @@ const Activities = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const activityData = {
+const activityData = {
         ...formData,
-        contactId: parseInt(formData.contactId),
-        dealId: formData.dealId ? parseInt(formData.dealId) : null
+        contact_id_c: parseInt(formData.contact_id_c),
+        deal_id_c: formData.deal_id_c ? parseInt(formData.deal_id_c) : null
       };
       
       await activityService.create(activityData);
@@ -116,18 +116,18 @@ const Activities = () => {
   };
 
   const getContactName = (contactId) => {
-    const contact = contacts.find(c => c.Id === contactId);
-    return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
+const contact = contacts.find(c => c.Id === (contactId?.Id || contactId));
+    return contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact";
   };
 
-  const getDealTitle = (dealId) => {
-    const deal = deals.find(d => d.Id === dealId);
-    return deal ? deal.title : null;
+const getDealTitle = (dealId) => {
+    const deal = deals.find(d => d.Id === (dealId?.Id || dealId));
+    return deal ? deal.title_c : "Unknown Deal";
   };
 
   const filteredActivities = typeFilter === "all" 
     ? activities 
-    : activities.filter(activity => activity.type === typeFilter);
+: activities.filter(activity => activity.type_c === typeFilter);
 
   if (loading) return <Loading type="table" />;
   if (error) return <Error message={error} onRetry={loadData} />;
@@ -186,8 +186,8 @@ const Activities = () => {
       ) : (
         <div className="space-y-4">
           {filteredActivities.map((activity, index) => {
-            const contact = contacts.find(c => c.Id === activity.contactId);
-            const deal = activity.dealId ? deals.find(d => d.Id === activity.dealId) : null;
+const contact = contacts.find(c => c.Id === (activity.contact_id_c?.Id || activity.contact_id_c));
+            const deal = activity.deal_id_c ? deals.find(d => d.Id === (activity.deal_id_c?.Id || activity.deal_id_c)) : null;
             
             return (
               <motion.div
@@ -205,35 +205,36 @@ const Activities = () => {
                       "bg-slate-100"
                     }`}>
                       <ApperIcon 
-                        name={getActivityIcon(activity.type)} 
+name={getActivityIcon(activity.type_c)} 
                         size={20} 
                         className={
-                          getActivityColor(activity.type) === "info" ? "text-blue-600" :
-                          getActivityColor(activity.type) === "success" ? "text-green-600" :
-                          getActivityColor(activity.type) === "warning" ? "text-yellow-600" :
+                          getActivityColor(activity.type_c) === "info" ? "text-blue-600" :
+                          getActivityColor(activity.type_c) === "success" ? "text-green-600" :
+                          getActivityColor(activity.type_c) === "warning" ? "text-yellow-600" :
                           "text-slate-600"
-                        } 
+                        }
                       />
                     </div>
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-3">
-                          <Badge variant={getActivityColor(activity.type)} size="sm">
-                            {activity.type.replace(/\b\w/g, l => l.toUpperCase())}
+<Badge variant={getActivityColor(activity.type_c)} size="sm">
+                            {activity.type_c.replace(/\b\w/g, l => l.toUpperCase())}
                           </Badge>
                           <span className="text-sm font-medium text-slate-800">
                             {getContactName(activity.contactId)}
                           </span>
-                          {deal && (
+{deal && (
                             <span className="text-sm text-slate-500">
+                              → {deal.title_c}
                               • {deal.title}
                             </span>
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-slate-400">
-                            {format(new Date(activity.createdAt), "MMM dd, yyyy 'at' h:mm a")}
+<span className="text-sm text-slate-400">
+                            {format(new Date(activity.CreatedOn), "MMM dd, yyyy 'at' h:mm a")}
                           </span>
                           <Button
                             variant="ghost"
@@ -247,7 +248,7 @@ const Activities = () => {
                       </div>
                       
                       <p className="text-slate-700 leading-relaxed">
-                        {activity.description}
+{activity.description_c}
                       </p>
                     </div>
                   </div>
@@ -271,16 +272,16 @@ const Activities = () => {
               Contact
             </label>
             <select
-              value={formData.contactId}
-              onChange={(e) => setFormData(prev => ({...prev, contactId: e.target.value}))}
-              className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+value={formData.contact_id_c}
+              onChange={(e) => setFormData(prev => ({...prev, contact_id_c: e.target.value}))}
               required
             >
-              <option value="">Select a contact</option>
+              <option value="">Select contact...</option>
               {contacts.map(contact => (
                 <option key={contact.Id} value={contact.Id}>
-                  {contact.firstName} {contact.lastName} - {contact.company}
+                  {contact.first_name_c} {contact.last_name_c} - {contact.company_c}
                 </option>
+              ))}
               ))}
             </select>
           </div>
@@ -291,14 +292,14 @@ const Activities = () => {
             </label>
             <select
               value={formData.dealId}
-              onChange={(e) => setFormData(prev => ({...prev, dealId: e.target.value}))}
-              className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+onChange={(e) => setFormData(prev => ({...prev, deal_id_c: e.target.value}))}
             >
-              <option value="">No related deal</option>
+              <option value="">Select deal (optional)...</option>
               {deals.map(deal => (
                 <option key={deal.Id} value={deal.Id}>
-                  {deal.title} - {getContactName(deal.contactId)}
+                  {deal.title_c} - {getContactName(deal.contact_id_c)}
                 </option>
+              ))}
               ))}
             </select>
           </div>
@@ -309,11 +310,11 @@ const Activities = () => {
             </label>
             <select
               value={formData.type}
-              onChange={(e) => setFormData(prev => ({...prev, type: e.target.value}))}
-              className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+onChange={(e) => setFormData(prev => ({...prev, type_c: e.target.value}))}
             >
               {activityTypes.map(type => (
                 <option key={type.key} value={type.key}>
+                  {type.label}
                   {type.label}
                 </option>
               ))}
@@ -326,7 +327,7 @@ const Activities = () => {
             </label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({...prev, description: e.target.value}))}
+onChange={(e) => setFormData(prev => ({...prev, description_c: e.target.value}))}
               rows={4}
               className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
               placeholder="Describe the activity details..."

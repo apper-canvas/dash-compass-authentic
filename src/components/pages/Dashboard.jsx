@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadDashboardData = async () => {
+const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError("");
@@ -51,8 +51,8 @@ const Dashboard = () => {
   const getMetrics = () => {
     const totalContacts = contacts.length;
     const activeDeals = deals.filter(deal => deal.stage !== "closed-won" && deal.stage !== "closed-lost").length;
-    const wonDeals = deals.filter(deal => deal.stage === "closed-won");
-    const totalRevenue = wonDeals.reduce((sum, deal) => sum + deal.value, 0);
+const wonDeals = deals.filter(deal => deal.stage_c === "closed-won");
+    const totalRevenue = wonDeals.reduce((sum, deal) => sum + deal.value_c, 0);
     
     return { totalContacts, activeDeals, totalRevenue, wonDeals: wonDeals.length };
   };
@@ -186,7 +186,7 @@ const Dashboard = () => {
             
             <div className="space-y-4">
               {activities.map((activity, index) => {
-                const contact = contacts.find(c => c.Id === activity.contactId);
+const contact = contacts.find(c => c.Id === activity.contact_id_c?.Id || activity.contact_id_c);
                 return (
                   <motion.div
                     key={activity.Id}
@@ -204,13 +204,13 @@ const Dashboard = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-800 truncate">
-                        {contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact"}
+{contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact"}
                       </p>
-                      <p className="text-sm text-slate-600 line-clamp-2">
-                        {activity.description}
+                      <p className="text-sm text-slate-600 mb-1">
+                        {activity.description_c}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">
-                        {format(new Date(activity.createdAt), "MMM dd, yyyy 'at' h:mm a")}
+<p className="text-xs text-slate-400 mt-1">
+                        {format(new Date(activity.CreatedOn), "MMM dd, yyyy 'at' h:mm a")}
                       </p>
                     </div>
                   </motion.div>
@@ -234,11 +234,11 @@ const Dashboard = () => {
             
             <div className="space-y-4">
               {deals
-                .filter(deal => deal.stage !== "closed-lost")
-                .sort((a, b) => b.value - a.value)
-                .slice(0, 5)
+.filter(deal => deal.stage_c !== "closed-lost")
+                .sort((a, b) => b.value_c - a.value_c)
+                .slice(0, 8)
                 .map((deal, index) => {
-                  const contact = contacts.find(c => c.Id === deal.contactId);
+                  const contact = contacts.find(c => c.Id === deal.contact_id_c?.Id || deal.contact_id_c);
                   return (
                     <motion.div
                       key={deal.Id}
@@ -249,26 +249,26 @@ const Dashboard = () => {
                     >
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-slate-800 truncate">
-                          {deal.title}
+{deal.title_c}
                         </p>
                         <p className="text-sm text-slate-600">
-                          {contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact"}
+                          {contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact"}
                         </p>
                         <div className="flex items-center space-x-2 mt-1">
-                          <Badge variant={getStageBadge(deal.stage)} size="sm">
-                            {deal.stage.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
+<Badge variant={getStageBadge(deal.stage_c)} size="sm">
+                            {deal.stage_c.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
                           </Badge>
                           <span className="text-xs text-slate-400">
-                            {deal.probability}% probability
+                            {deal.probability_c}% probability
                           </span>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-bold text-slate-800">
-                          ${deal.value.toLocaleString()}
+${deal.value_c.toLocaleString()}
                         </p>
                         <p className="text-xs text-slate-400">
-                          {format(new Date(deal.expectedCloseDate), "MMM dd")}
+                          {format(new Date(deal.expected_close_date_c), "MMM dd")}
                         </p>
                       </div>
                     </motion.div>
