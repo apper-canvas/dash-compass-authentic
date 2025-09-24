@@ -282,7 +282,6 @@ value={formData.contact_id_c}
                   {contact.first_name_c} {contact.last_name_c} - {contact.company_c}
                 </option>
               ))}
-              ))}
             </select>
           </div>
           
@@ -291,15 +290,14 @@ value={formData.contact_id_c}
               Related Deal (Optional)
             </label>
             <select
-              value={formData.dealId}
-onChange={(e) => setFormData(prev => ({...prev, deal_id_c: e.target.value}))}
+value={formData.dealId}
+              onChange={(e) => setFormData(prev => ({...prev, deal_id_c: e.target.value}))}
             >
               <option value="">Select deal (optional)...</option>
               {deals.map(deal => (
                 <option key={deal.Id} value={deal.Id}>
                   {deal.title_c} - {getContactName(deal.contact_id_c)}
                 </option>
-              ))}
               ))}
             </select>
           </div>
@@ -309,12 +307,11 @@ onChange={(e) => setFormData(prev => ({...prev, deal_id_c: e.target.value}))}
               Activity Type
             </label>
             <select
-              value={formData.type}
-onChange={(e) => setFormData(prev => ({...prev, type_c: e.target.value}))}
+value={formData.type}
+              onChange={(e) => setFormData(prev => ({...prev, type_c: e.target.value}))}
             >
               {activityTypes.map(type => (
                 <option key={type.key} value={type.key}>
-                  {type.label}
                   {type.label}
                 </option>
               ))}
