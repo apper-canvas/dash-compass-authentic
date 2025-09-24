@@ -1,8 +1,9 @@
 [
-  {
+{
     "Id": 1,
     "title": "TechCorp Enterprise Package",
     "contactId": 1,
+    "assignee": "Sarah Johnson",
     "value": 45000,
     "stage": "proposal",
     "probability": 75,
@@ -10,9 +11,10 @@
     "createdAt": "2024-01-15T09:30:00Z"
   },
   {
-    "Id": 2,
+"Id": 2,
     "title": "Innovate Solutions Consultation",
     "contactId": 2,
+    "assignee": "Michael Chen",
     "value": 12500,
     "stage": "qualified",
     "probability": 60,
@@ -20,9 +22,10 @@
     "createdAt": "2024-01-18T11:20:00Z"
   },
   {
-    "Id": 3,
+"Id": 3,
     "title": "StartupIO Platform License",
     "contactId": 3,
+    "assignee": "Emily Rodriguez",
     "value": 25000,
     "stage": "closed-won",
     "probability": 100,
@@ -30,9 +33,10 @@
     "createdAt": "2024-01-10T08:15:00Z"
   },
   {
-    "Id": 4,
+"Id": 4,
     "title": "Wilson Consulting Integration",
     "contactId": 4,
+    "assignee": "David Thompson",
     "value": 8750,
     "stage": "lead",
     "probability": 25,
@@ -40,9 +44,10 @@
     "createdAt": "2024-01-20T13:45:00Z"
   },
   {
-    "Id": 5,
+"Id": 5,
     "title": "GlobalTech Premium Support",
     "contactId": 5,
+    "assignee": "Lisa Anderson",
     "value": 67500,
     "stage": "proposal",
     "probability": 80,
@@ -50,9 +55,10 @@
     "createdAt": "2024-01-12T15:30:00Z"
   },
   {
-    "Id": 6,
+"Id": 6,
     "title": "Enterprise Solutions Upgrade",
     "contactId": 6,
+    "assignee": "Sarah Johnson",
     "value": 32000,
     "stage": "qualified",
     "probability": 50,
@@ -60,9 +66,10 @@
     "createdAt": "2024-01-14T10:00:00Z"
   },
   {
-    "Id": 7,
+"Id": 7,
     "title": "DataPlus Annual Contract",
     "contactId": 7,
+    "assignee": "Michael Chen",
     "value": 54000,
     "stage": "closed-won",
     "probability": 100,
@@ -70,9 +77,10 @@
     "createdAt": "2024-01-08T12:45:00Z"
   },
   {
-    "Id": 8,
+"Id": 8,
     "title": "CloudWare Migration Project",
     "contactId": 8,
+    "assignee": "Emily Rodriguez",
     "value": 18750,
     "stage": "lead",
     "probability": 30,

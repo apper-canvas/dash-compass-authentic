@@ -22,9 +22,10 @@ const Deals = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     title: "",
     contactId: "",
+    assignee: "",
     value: "",
     stage: "lead",
     probability: "",
@@ -65,8 +66,9 @@ const Deals = () => {
     if (deal) {
       setSelectedDeal(deal);
       setFormData({
-        title: deal.title,
+title: deal.title,
         contactId: deal.contactId.toString(),
+        assignee: deal.assignee || "",
         value: deal.value.toString(),
         stage: deal.stage,
         probability: deal.probability.toString(),
@@ -75,9 +77,10 @@ const Deals = () => {
       setIsEditing(true);
     } else {
       setSelectedDeal(null);
-      setFormData({
+setFormData({
         title: "",
         contactId: "",
+        assignee: "",
         value: "",
         stage: "lead",
         probability: "",
@@ -101,6 +104,7 @@ const Deals = () => {
         ...formData,
         contactId: parseInt(formData.contactId),
         value: parseFloat(formData.value),
+assignee: formData.assignee,
         probability: parseInt(formData.probability),
         expectedCloseDate: new Date(formData.expectedCloseDate).toISOString()
       };
@@ -235,11 +239,18 @@ const Deals = () => {
                             {deal.title}
                           </h4>
                           <ApperIcon name="GripVertical" size={16} className="text-slate-400" />
-                        </div>
+</div>
                         
-                        <p className="text-sm text-slate-600 mb-2">
+                        <p className="text-sm text-slate-600 mb-1">
                           {getContactName(deal.contactId)}
                         </p>
+                        
+                        {deal.assignee && (
+                          <p className="text-xs text-slate-500 mb-2 flex items-center">
+                            <ApperIcon name="User" size={12} className="mr-1" />
+                            Assigned to {deal.assignee}
+                          </p>
+                        )}
                         
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-lg font-bold text-slate-800">
@@ -292,7 +303,7 @@ const Deals = () => {
             <select
               value={formData.contactId}
               onChange={(e) => setFormData(prev => ({...prev, contactId: e.target.value}))}
-              className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             >
               <option value="">Select a contact</option>
@@ -303,12 +314,30 @@ const Deals = () => {
               ))}
             </select>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Assignee
+            </label>
+            <select
+              value={formData.assignee}
+              onChange={(e) => setFormData(prev => ({...prev, assignee: e.target.value}))}
+              className="block w-full px-3 py-2.5 border border-slate-300 rounded-md text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="">Select assignee</option>
+              <option value="Sarah Johnson">Sarah Johnson</option>
+              <option value="Michael Chen">Michael Chen</option>
+              <option value="Emily Rodriguez">Emily Rodriguez</option>
+              <option value="David Thompson">David Thompson</option>
+              <option value="Lisa Anderson">Lisa Anderson</option>
+            </select>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Deal Value ($)"
               type="number"
-              value={formData.value}
+value={formData.value}
               onChange={(e) => setFormData(prev => ({...prev, value: e.target.value}))}
               required
             />

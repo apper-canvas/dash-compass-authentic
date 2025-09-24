@@ -20,7 +20,7 @@ export const dealService = {
     await delay(400);
     const newId = deals.length > 0 ? Math.max(...deals.map(d => d.Id)) + 1 : 1;
     const newDeal = {
-      ...dealData,
+...dealData,
       Id: newId,
       createdAt: new Date().toISOString()
     };
@@ -32,7 +32,7 @@ export const dealService = {
     await delay(300);
     const index = deals.findIndex(d => d.Id === parseInt(id));
     if (index !== -1) {
-      deals[index] = { ...deals[index], ...updateData };
+deals[index] = { ...deals[index], ...updateData };
       return { ...deals[index] };
     }
     return null;
