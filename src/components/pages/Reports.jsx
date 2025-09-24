@@ -67,9 +67,9 @@ function Reports() {
       strokeWidth: 2,
       fillOpacity: 1,
       strokeOpacity: 0.9
-    },
+},
     xaxis: {
-      categories: conversionTrend.map(item => format(new Date(item.month), 'MMM yyyy')),
+      categories: conversionTrend?.map(item => format(new Date(item.month), 'MMM yyyy')) || [],
       labels: {
         style: {
           fontSize: '12px',
@@ -103,11 +103,10 @@ function Reports() {
     }
   };
 
-  const conversionChartSeries = [{
+const conversionChartSeries = [{
     name: 'Conversion Rate',
-    data: conversionTrend.map(item => item.rate)
+    data: conversionTrend?.map(item => item.rate) || []
   }];
-
   const leadGenChartOptions = {
     chart: {
       type: 'bar',
@@ -115,9 +114,9 @@ function Reports() {
       toolbar: { show: false },
       fontFamily: 'Inter, system-ui, sans-serif'
     },
-    colors: ['#f59e0b', '#8b5cf6'],
+colors: ['#f59e0b', '#8b5cf6'],
     xaxis: {
-      categories: leadGeneration.monthly.map(item => format(new Date(item.month), 'MMM yyyy')),
+      categories: leadGeneration?.monthly?.map(item => format(new Date(item.month), 'MMM yyyy')) || [],
       labels: {
         style: {
           fontSize: '12px',
@@ -151,24 +150,23 @@ function Reports() {
     }
   };
 
-  const leadGenChartSeries = [{
+const leadGenChartSeries = [{
     name: 'New Leads',
-    data: leadGeneration.monthly.map(item => item.newLeads)
+    data: leadGeneration?.monthly?.map(item => item.newLeads) || []
   }, {
     name: 'Qualified Leads',
-    data: leadGeneration.monthly.map(item => item.qualifiedLeads)
+    data: leadGeneration?.monthly?.map(item => item.qualifiedLeads) || []
   }];
-
   const pipelineChartOptions = {
     chart: {
       type: 'donut',
       height: 300,
       fontFamily: 'Inter, system-ui, sans-serif'
     },
-    colors: ['#1e3a8a', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'],
-    labels: pipelineAnalysis.byStage.map(item => 
+colors: ['#1e3a8a', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'],
+    labels: pipelineAnalysis?.byStage?.map(item => 
       item.stage.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())
-    ),
+    ) || [],
     legend: {
       position: 'bottom',
       fontSize: '12px',
@@ -181,9 +179,9 @@ function Reports() {
           labels: {
             show: true,
             total: {
-              show: true,
+show: true,
               label: 'Total Value',
-              formatter: () => `$${pipelineAnalysis.totalValue.toLocaleString()}`
+              formatter: () => `$${(pipelineAnalysis?.totalValue || 0).toLocaleString()}`
             }
           }
         }
@@ -195,9 +193,7 @@ function Reports() {
       }
     }
   };
-
-  const pipelineChartSeries = pipelineAnalysis.byStage.map(item => item.value);
-
+const pipelineChartSeries = pipelineAnalysis?.byStage?.map(item => item.value) || [];
   const revenueChartOptions = {
     chart: {
       type: 'area',
@@ -218,9 +214,9 @@ function Reports() {
     stroke: {
       curve: 'smooth',
       width: 3
-    },
+},
     xaxis: {
-      categories: revenueMetrics.monthly.map(item => format(new Date(item.month), 'MMM yyyy')),
+      categories: revenueMetrics?.monthly?.map(item => format(new Date(item.month), 'MMM yyyy')) || [],
       labels: {
         style: {
           fontSize: '12px',
@@ -248,11 +244,10 @@ function Reports() {
     }
   };
 
-  const revenueChartSeries = [{
+const revenueChartSeries = [{
     name: 'Revenue',
-    data: revenueMetrics.monthly.map(item => item.revenue)
+    data: revenueMetrics?.monthly?.map(item => item.revenue) || []
   }];
-
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
